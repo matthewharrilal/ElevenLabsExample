@@ -1,36 +1,36 @@
-# 🎯 ElevenLabs Validation Tool
+# 🎯 ElevenLabs SDK Validation Tool
 
-A focused, minimal tool for validating ElevenLabs Conversational AI real-time performance and readiness for HeyGen video integration.
+A focused, minimal tool for validating ElevenLabs Conversational AI real-time performance using the official React SDK.
 
 ## 🎯 What This Tool Does
 
-**Core Objective**: Test if ElevenLabs can achieve acceptable real-time latency (<1.5s) for HeyGen avatar integration.
+**Core Objective**: Test if ElevenLabs can achieve acceptable real-time latency (<1.5s) for conversational AI applications.
 
 **Validation Process**:
-1. **Connect** to ElevenLabs via WebSocket
-2. **Record** real-time audio (16kHz, mono, 16-bit PCM)
-3. **Send** audio chunks to ElevenLabs for processing
-4. **Receive** AI responses and audio playback
-5. **Measure** end-to-end latency performance
+1. **Connect** to ElevenLabs via official SDK
+2. **Start** real-time conversation session
+3. **Monitor** AI responses and audio playback
+4. **Measure** end-to-end latency performance
+5. **Track** performance metrics in real-time
 
 ## 🏗️ Current Architecture
 
-**Minimal, Focused Design**:
-- **3 Core Hooks**: WebSocket client, audio pipeline, basic state
-- **1 UI Component**: Simple recording controls
-- **1 Config File**: Essential ElevenLabs settings
-- **Total**: ~536 lines of focused validation code
+**Clean, SDK-First Design**:
+- **1 Core Hook**: `useElevenLabsConversation` - SDK integration
+- **1 Utility**: `ConversationPerformanceMonitor` - Performance tracking
+- **1 Config**: `environment.js` - Configuration management
+- **Total**: ~300 lines of focused validation code
 
 ### File Structure
 ```
 src/
 ├── hooks/
-│   ├── useElevenLabsClient.js    # WebSocket + API communication
-│   └── useAudioPipeline.js       # Audio recording + playback
-├── components/
-│   └── RecordingControls.js      # Basic record/stop UI
-└── config/
-    └── validation.js             # Essential settings
+│   └── useElevenLabsConversation.js    # Official SDK integration
+├── utils/
+│   └── performanceMonitor.js           # Performance metrics
+├── config/
+│   └── environment.js                  # Configuration
+└── App.js                              # Main application
 ```
 
 ## 🚀 Getting Started
@@ -48,12 +48,15 @@ npm install
 ```
 
 ### Configuration
-Edit `src/config/validation.js` with your ElevenLabs credentials:
+Update `app.config.js` with your ElevenLabs credentials:
 ```javascript
-export const ELEVENLABS_CONFIG = {
-  apiKey: "your_actual_api_key",
-  agentId: "your_actual_agent_id",
-  websocketUrl: "wss://api.elevenlabs.io/v1/convai/conversation"
+export default {
+  expo: {
+    extra: {
+      ELEVENLABS_API_KEY: "your-api-key-here",
+      ELEVENLABS_AGENT_ID: "your-agent-id-here",
+    }
+  }
 };
 ```
 
@@ -66,44 +69,46 @@ npm run auto      # Auto-restart server with monitoring
 ## 📊 Success Criteria
 
 **Target Metrics**:
-- ✅ **WebSocket Connection**: Establishes and maintains connection
-- ✅ **Audio Recording**: Real-time microphone capture working
-- ✅ **ElevenLabs Integration**: Audio sent and responses received
+- ✅ **SDK Connection**: Establishes and maintains stable connection
+- ✅ **Conversation Start**: Successfully initiates AI conversation
+- ✅ **Real-time Responses**: AI responds with acceptable latency
 - ✅ **Latency Target**: End-to-end <1.5 seconds
 - ✅ **Audio Playback**: AI responses play back clearly
 
 ## 🔧 Technical Details
 
-**Audio Specifications**:
-- **Format**: 16kHz, mono, 16-bit PCM
-- **Chunk Size**: 250ms chunks (ElevenLabs requirement)
-- **Encoding**: WebM/Opus → PCM16 → Base64
+**SDK Integration**:
+- **Package**: `@elevenlabs/react` v0.5.2
+- **Connection Type**: WebSocket (configurable to WebRTC)
+- **Event Handling**: Built-in connection lifecycle management
+- **Error Handling**: Comprehensive error handling with retry logic
 
-**WebSocket Protocol**:
-- **Endpoint**: `wss://api.elevenlabs.io/v1/convai/conversation`
-- **Authentication**: API key in URL parameters
-- **Message Types**: Standard ElevenLabs ConvAI format
+**Performance Monitoring**:
+- **Real-time Metrics**: Live latency tracking
+- **Response Timing**: First response and average response times
+- **Target Validation**: <1.5s latency requirement checking
+- **Session Analytics**: Conversation duration and response counts
 
 ## 🎯 Validation Results
 
 **This tool will tell you**:
 - Can ElevenLabs achieve real-time conversation?
 - What's the actual latency vs. targets?
-- Is the audio quality sufficient for video integration?
-- Should you proceed with HeyGen avatar development?
+- Is the audio quality sufficient for production use?
+- Should you proceed with ElevenLabs integration?
 
 **Success = Proven technical feasibility**
-**Failure = Clear data on why it won't work**
+**Failure = Clear data on performance limitations**
 
 ## 🚨 Troubleshooting
 
 **Common Issues**:
-- **WebSocket Connection Failed**: Check API key and agent ID
-- **Audio Not Recording**: Grant microphone permissions in browser
-- **No AI Responses**: Verify agent is properly configured in ElevenLabs
+- **Connection Failed**: Check API key and agent ID in app.config.js
+- **Agent Not Responding**: Verify agent is properly configured in ElevenLabs
+- **Performance Issues**: Check network latency and ElevenLabs service status
 
-**Debug Mode**: Check browser console for detailed logging
+**Debug Mode**: Check browser console for detailed logging and performance metrics
 
 ---
 
-**Purpose**: This is a validation tool, not a production application. It's designed to test ElevenLabs feasibility with minimal complexity.
+**Purpose**: This is a validation tool, not a production application. It's designed to test ElevenLabs feasibility with minimal complexity using the official SDK.

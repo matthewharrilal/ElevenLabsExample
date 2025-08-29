@@ -12,7 +12,6 @@
   "dependencies": {
     "@elevenlabs/react": "^0.5.2",
     "@expo/metro-runtime": "~5.0.4",
-    "dotenv": "^17.2.1",
     "expo": "~53.0.22",
     "expo-constants": "^17.1.7",
     "react": "19.0.0",

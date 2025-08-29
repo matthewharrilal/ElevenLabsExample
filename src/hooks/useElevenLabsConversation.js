@@ -1,5 +1,5 @@
 import { useConversation } from '@elevenlabs/react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { ENVIRONMENT_CONFIG } from '../config/environment';
 
 export const useElevenLabsConversation = () => {
@@ -14,19 +14,19 @@ export const useElevenLabsConversation = () => {
   // VERIFIED: SDK handles all WebSocket connections, audio, and conversation management
   const conversation = useConversation({
     // VERIFIED: Event handlers for conversation lifecycle
-    onConnect: () => {
+    onConnect: useCallback(() => {
       console.log('ElevenLabs conversation connected');
       setLatencyMetrics(prev => ({ 
         ...prev, 
         sessionStart: performance.now() 
       }));
-    },
+    }, []),
 
-    onDisconnect: () => {
+    onDisconnect: useCallback(() => {
       console.log('ElevenLabs conversation disconnected');
-    },
+    }, []),
 
-    onMessage: (message) => {
+    onMessage: useCallback((message) => {
       console.log('Message received:', message);
       
       // Track response timing for latency measurement
@@ -46,11 +46,11 @@ export const useElevenLabsConversation = () => {
             : null
         };
       });
-    },
+    }, []),
 
-    onError: (error) => {
+    onError: useCallback((error) => {
       console.error('ElevenLabs conversation error:', error);
-    },
+    }, []),
 
     // VERIFIED: Conversation overrides
     overrides: {
@@ -96,8 +96,8 @@ export const useElevenLabsConversation = () => {
     });
   }, [conversation]);
 
-  // Calculate performance metrics
-  const getPerformanceMetrics = useCallback(() => {
+  // Calculate performance metrics with useMemo for optimization
+  const performanceMetrics = useMemo(() => {
     const { sessionStart, firstResponse, averageLatency, responses } = latencyMetrics;
     
     return {
@@ -113,7 +113,7 @@ export const useElevenLabsConversation = () => {
         isLatencyAcceptable: averageLatency ? averageLatency < 1500 : null
       }
     };
-  }, [conversation, latencyMetrics]);
+  }, [conversation.status, conversation.isSpeaking, latencyMetrics]);
 
   // Calculate conversation duration
   const getConversationDuration = useCallback(() => {
@@ -127,7 +127,7 @@ export const useElevenLabsConversation = () => {
     endConversation,
     
     // Status and metrics
-    ...getPerformanceMetrics(),
+    ...performanceMetrics,
     
     // Additional utility functions
     getConversationDuration,

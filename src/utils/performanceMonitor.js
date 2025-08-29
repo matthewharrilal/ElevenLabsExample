@@ -1,12 +1,9 @@
-import { ENVIRONMENT_CONFIG } from '../config/environment';
-
 export class ConversationPerformanceMonitor {
   constructor() {
     this.metrics = {
       sessionStart: null,
       responses: [],
-      errors: [],
-      connectionEvents: []
+      errors: []
     };
   }
 
